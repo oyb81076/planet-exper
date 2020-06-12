@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>详情页</title>
+</head>
+<body>
+  <div x-find-one="db='5edf0ae4ba3500b4593eb148',id=query.id:$user">
+    <div x-if="pt.isEmpty($user)">数据不存在</div>
+    <div x-if="pt.isNotEmpty($user)">
+      <div>
+        <span>ID:</span>
+        <span x-text="$user._id">191729817929121</span>
+      </div>
+      <div>
+        <span>创建日期:</span>
+        <span x-text="pt.format_date($user.timestamp, 'YYYY-MM-DD HH:mm:ss')">日期</span>
+      </div>
+      <div>
+        <span>Nickname:</span>
+        <span x-text="$user.data.nickname">小红帽</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

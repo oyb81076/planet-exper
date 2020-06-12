@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "functions": [
+    {
+      "title": "轮播",
+      "name": "pt.plugins.carousel",
+      "args": [
+        {
+          "type": "object",
+          "value": [
+            { "key": "interval", "title": "循环时间", "type": "number" },
+            { "key": "prev", "title": "上一个元素", "type": "selector" },
+            { "key": "next", "title": "上一个元素", "type": "selector" },
+            { "key": "indicators", "title": "指示信号", "desc": "比如 '.carousel-indicators li'", "type": "selector" }
+          ]
+        }
+      ]
+    }
+  ]
+}

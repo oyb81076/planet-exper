@@ -1,0 +1,60 @@
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>静态版本</h1>
+  <div class="carousel" x-script="pt.plugins.carousel(this, {
+    interval:10,
+    indicators:'.carousel-indicators li',
+    items: '.item',
+    prev:'.carousel-control.left',
+    next:'.carousel-control.right'
+  });
+  ">
+    <div class="carousel-inner">
+      <div class="item active">
+        <img src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png">
+      </div>
+      <div class="item">
+        <img src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png">
+      </div>
+      <div class="item">
+        <img src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png">
+      </div>
+    </div>
+    <ol class="carousel-indicators">
+      <li class="active"></li>
+      <li ></li>
+      <li ></li>
+    </ol>
+    <div class="left carousel-control"><span>&lt;</span></div>
+    <div class="right carousel-control"><span>&gt;</span></div>
+  </div>
+  <h1>动态版本</h1>
+  <div
+    class="carousel"
+    x-find-many="db='5edf0ae4ba3500b4593eb148':$array"
+    x-script="pt.plugins.carousel(this, {
+      interval:10,
+      indicators:'.carousel-indicators li',
+      items: '.item',
+      prev:'.carousel-control.left',
+      next:'.carousel-control.right'
+    });
+    ">
+    <div class="carousel-inner">
+      <div class="item" x-each="$array:{item=$item,stat=$stat}" x-class="{active:$stat.first}">
+        <img x-src="$item.data.nail">
+      </div>
+    </div>
+    <ol class="carousel-indicators">
+      <li x-each="$array:{stat=$stat}" x-class="{active:$stat.first}"></li>
+    </ol>
+    <div class="left carousel-control"><span>&lt;</span></div>
+    <div class="right carousel-control"><span>&gt;</span></div>
+  </div>
+</body>
+</html>

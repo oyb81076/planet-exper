@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h1>Static</h1>
+<!-- Comment -->
+<div>This is Content</div>
+<h1>th:text</h1>
+<div th:text="${title}"></div>
+<div th:text="'This is th:Text' + ${title}"></div>
+<div th:text="1 + 2"></div>
+<div th:text="'' ?: 'default Value of empty string'"></div>
+<div th:text="null ?: 'default Value of empty null'"></div>
+<div th:text="|This is Text ${title}|"></div>
+<h1>th:each</h1>
+<ul>
+  <li th:each="item: ${users}">
+    <span>ID:</span>
+    <span th:text="${item.id}">ID</span>
+    <span>Name:</span>
+    <span th:text="${item.name}">Name</span>
+  </li>
+</ul>
+<ul>
+  <li th:each="value,s:${users}">
+    <span>Count:</span>
+    <span th:text="${s.index}"></span>
+    <span>,</span>
+    <span>ID:</span>
+    <span th:text="${value.id}">ID</span>
+    <span>,</span>
+    <span>Name:</span>
+    <span th:text="${value.name}">Name</span>
+  </li>
+</ul>
+<h1>th:object</h1>
+<ul>
+  <li th:each="value: ${users}" th:object="${value}">
+    <span th:text="*{id}"></span>
+    <span th:text="${value.id}"></span>
+    <span th:text="*{name}"></span>
+    <span th:text="${value.name}"></span>
+  </li>
+</ul>
+<h1>th:if</h1>
+<div th:if="${price} eq 0">Price ${price} eq 0</div>
+<div th:if="${price} ne 1">Price ${price} ne 1</div>
+<div th:if="${price} < 1">Price ${price} < 1</div>
+<div th:if="${price} != 1">Price ${price} != 1</div>
+<div th:if="true">true</div>
+<div th:if="!false">!false</div>
+</body>
+</html>

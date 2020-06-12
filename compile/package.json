@@ -1,0 +1,27 @@
+{
+  "name": "compile",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "gen": "ts-node scripts/gen",
+    "test": "jest"
+  },
+  "dependencies": {
+    "acorn": "^7.2.0",
+    "dayjs": "^1.8.28",
+    "nanoid": "^3.1.9",
+    "parse5": "^6.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-typescript": "^7.10.1",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.12",
+    "@types/parse5": "^5.0.3",
+    "jest": "^26.0.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  }
+}
