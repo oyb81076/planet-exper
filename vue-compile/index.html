@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src="node_modules/@vue/compiler-dom/dist/compiler-dom.global.js"></script>
+  <script>
+    var node = VueCompilerDOM.compile(`
+      <div>Static {{a + 2}} Node</div>
+      <div>Static Node</div>
+      <div class="base0" v-if="a > 2">IF</div>
+      <div class="b1" :class="clsx({active})" :id="id"></div>
+    `)
+    console.log(node)
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body x-constant="{
+  $array:[1,2,3,4],
+  $int:3,
+  $str:'this is a string value',
+  $date: new Date('2020-06-16T07:55:07.133Z')
+};{$array:{kind:'string'}}">
+  <div x-each="{array:$array}:{item:$item}">
+    <div x-text="$item"></div>
+  </div>
+</body>
+</html>

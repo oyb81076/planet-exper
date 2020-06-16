@@ -1,17 +1,17 @@
-<div x-args="{active: {type:'number', default: 0}}">
-  <div>This is Header</div>
+<div x-args="{active: {kind:'number', defaults: 0}, title: {kind:'string', defaults:'default title'}}">
+  <div x-text="title">This is Header</div>
   <ul>
     <li x-class="{class: args.active == 0}">
-      <a x-href="file=5ee04223ead22356743324f1">首页</a>
+      <a x-href="file='5ee04223ead22356743324f1'">首页</a>
     </li>
     <li x-class="{class: args.active == 1}">
-      <a x-href="file=5ee04223ead22356743324f2">产品</a>
+      <a x-href="file='5ee04223ead22356743324f2',query='classify=2'">产品</a>
     </li>
     <li x-class="{class: args.active == 2}">
-      <a x-href="file=5ee04223ead22356743324f3">新闻</a>
+      <a x-href="file='5ee04223ead22356743324f3'">新闻</a>
     </li>
     <li x-class="{class: args.active == 3}">
-      <a x-href="file=5ee04223ead22356743324f3">关于</a>
+      <a x-href="file='5ee04223ead22356743324f3'">关于</a>
     </li>
   </ul>
 </div>

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -5,6 +6,8 @@
   <title>Document</title>
 </head>
 <body>
-  <div x-include="5ee05607c439e68401f24fbc" x-include-with="active=1"></div>
+  <div x-vars="{$var0:12,$var1:33}">
+    <div x-text="$var0 + $var1"></div>
+  </div>
 </body>
 </html>

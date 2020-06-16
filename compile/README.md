@@ -7,7 +7,6 @@ x-{directive}="...input"
 x-{directive}="...{input};{mock}"
 x-{directive}="...{input};{mock}"
 x-{directive}="...input:{...output};{mock}"
-x-fetch-page="'db://5edf0ae4ba3500b4593eb148','size=10&index=${query.index}&username=${query.username}':{total:aliasTotal,rows:aliasRows}"
 x-each="users:{item,stat};10"
 x-if="active;true"
 

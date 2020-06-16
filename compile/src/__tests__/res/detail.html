@@ -1,24 +1,31 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" x-links="['5ee34c4eb465555f3f405055']" x-query="{id:{kind:'string',defaults:''}}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>详情页</title>
 </head>
 <body>
-  <div x-find-one="db='5edf0ae4ba3500b4593eb148',id=query.id:$user">
-    <div x-if="pt.isEmpty($user)">数据不存在</div>
-    <div x-if="pt.isNotEmpty($user)">
-      <div>
-        <span>ID:</span>
-        <span x-text="$user._id">191729817929121</span>
-      </div>
-      <div>
-        <span>创建日期:</span>
-        <span x-text="pt.format_date($user.timestamp, 'YYYY-MM-DD HH:mm:ss')">日期</span>
-      </div>
-      <div>
-        <span>Nickname:</span>
-        <span x-text="$user.data.nickname">小红帽</span>
+  <div x-find-one="...:classify">
+    <div x-find-one="{tb:'5edf0ae4ba3500b4593eb148',id:query.id}:$user">
+      <div x-if="pt.isEmpty($user)">数据不存在</div>
+      <div x-if="pt.isNotEmpty($user)">
+        <div>
+          <span>ID:</span>
+          <span x-text="$user._id">191729817929121</span>
+        </div>
+        <div>
+          <span>创建日期:</span>
+          <span x-text="pt.format_date($user.timestamp, 'YYYY-MM-DD HH:mm:ss')">日期</span>
+        </div>
+        <div>
+          <span>Nickname:</span>
+          <span x-text="$user.data.nickname">小红帽</span>
+        </div>
+        <div>
+          <span>价格:</span>
+          <span x-text="pt.format_number($user.data.nickname,'#,##0.00')">1,120.02</span>
+        </div>
       </div>
     </div>
   </div>

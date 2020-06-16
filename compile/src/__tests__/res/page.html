@@ -1,7 +1,9 @@
+<!DOCTYPE html>
 <html
-  lang="zh-cn"
-  x-link="///global_css,///index_css"
   x-key="15rD0W"
+  lang="zh-cn"
+  x-link="['5ee34c4db465555f3f405054','5ee34c4eb465555f3f405055']"
+  x-query="{nickname:{kind:'string',defaults:''},cellphone:{kind:'string',defaults:''}}"
 >
 <head x-key="pvTYGu">
   <meta x-key="Ece0W2" charset="UTF-8">
@@ -11,49 +13,69 @@
 <body x-key="UzwZgV" class="x-UzwZgV">
   <form>
     <input name="nickname" x-value="query.nickname">
+    <input name="cellphone" x-value="query.cellphone">
     <button type="submit">搜索</button>
   </form>
-  <div x-find-page="db='5edf0ae4ba3500b4593eb148',query='data.nickname=${query.nickname}&index=${query.index}&count=20':{total=$total,size=$size,index=$index,rows=$users}">
+  <div x-find-page="{
+    tb:'5edf0ae4ba3500b4593eb148',
+    params:{'data.nickname': query.nickname, 'data.cellphone': query.cellphone },
+    defaultSize:20
+  }:{
+    total:$total,
+    size:$size,
+    index:$index,
+    rows:$users
+  }">
     <table>
       <thead>
         <tr>
           <th>序号</th>
           <th>ID</th>
-          <th>昵称</th>
+          <th>名称</th>
+          <th>价格</th>
           <th>创建日期</th>
           <th>详情</th>
         </tr>
       </thead>
       <tbody>
-        <tr x-each="$users:{item=$item,stat=$stat};10">
+        <tr x-each="{array:$users}:{item:$item,stat:$stat};{length:10}">
           <td x-text="$stat.count">1</td>
           <td x-text="$item._id">x6qo197s5612</td>
           <td x-text="$item.data.nickname">小红帽</td>
+          <td x-text="pt.format_number($item.data.price,'¥ #,##0.00')">¥ 12.00</td>
           <td x-text="pt.format_date($item.timestamp,'YYYY-MM-DD HH:mm')">2020-01-01 07:31</td>
-          <td><a x-href="file=5edf0ae4ba3500b4593eb148,query='id=${$item.id}'">详情</a></td>
+          <td><a x-href="{file:'5edf0ae4ba3500b4593eb148',query:'id=${$item._id}'}">详情</a></td>
         </tr>
       </tbody>
     </table>
-    <div x-pagination="query=query,indexName='index',index=$index,size=$size,total=$total=$compiled;{index:10,size:20,total:200}">
-      <a x-pagination-to="compiled=$compiled,to='first':{active=$active,url=$url};{active:true}"
-         x-class="{active=$active}"
+    <div x-pagination-opts="{index:$index,size:$size,total:$total}:$page_opts;{index:10,size:20,total:200}">
+      <span>每页</span>
+      <select x-on-change-go="pt.go(null, pt.replace_query({'size': pt.get_value(this)}), null)">
+        <option x--selected="$size==10" value="10">10</option>
+        <option x--selected="$size==20" value="20">20</option>
+        <option x--selected="$size==40" value="40">40</option>
+        <option x--selected="$size==100" value="100">100</option>
+      </select>
+      <span>条</span>
+      <a x-pagination-to="{opts:$page_opts,to:'first'}:{active:$active,url:$url};{active:true}"
+         x-class="{active:$active}"
          x-href="$url">首页</a>
-      <a x-pagination-to="compiled=$compiled,to='prev':{active=$active,url=$url}"
+      <a x-pagination-to="{opts:$page_opts,to:'prev'}:{active:$active,url:$url}"
          x-class="{active:$active}"
          x-href="$url">上页</a>
-      <div x-pagination-links="compiled=$compiled,size=20,border=1:{starts=$starts,links=$links,ends=$ends}">
-        <a x-each="$starts:{item=$item}" x-href="$item.url" x-text="$item.text" x-class="{active:$item.active}">1</a>
+      <div x-pagination-links="{opts:$page_opts,size:20,border:1}:{starts:$starts,links:$links,ends:$ends}">
+        <a x-each="{array:$starts}:{item:$item}" x-url-href="{url:$item.url}" x-text="$item.text" x-classes="{active:$item.active}">1</a>
         <span x-if="pt.isNotEmpty($starts)">...</span>
-        <a x-each="$links:{item=$item}" x-href="$item.url" x-text="$item.text" x-class="{active:$item.active}">1</a>
+        <a x-each="{array:$links}:{item:$item}" x-url-href="{url:$item.url}" x-text="$item.text" x-classes="{active:$item.active}">1</a>
         <span x-if="pt.isNotEmpty($ends)">...</span>
-        <a x-each="$ends:{item=$item}" x-href="$item.url" x-text="$item.text" x-class="{active:$item.active}">1</a>
+        <a x-each="{array:$ends}:{item:$item}" x-url-href="{url:$item.url}" x-text="$item.text" x-classes="{active:$item.active}">1</a>
       </div>
-      <a x-pagination-to="compiled=$compiled,to='prev':{active=$active,url=$url}"
-         x-class="{active=$active}"
-         x-href="$url">下页</a>
-      <a x-pagination-to="compiled=$compiled,to='prev':{active=$active,url=$url}"
-         x-class="{active=$active}"
-         x-href="$url">末页</a>
+      <a x-pagination-to="{opts:$page_opts,to:'next'}:{active:$active,url:$url}"
+         x-classes="{active:$active}"
+         x-href="{url:$url}">下页</a>
+      <a x-pagination-to="{opts:$page_opts,to:'last'}:{active:$active,url:$url}"
+         x-class="{active:$active}"
+         x-href="{url:$url}">末页</a>
     </div>
   </div>
 </body>

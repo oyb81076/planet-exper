@@ -6,19 +6,19 @@
   <title>表单提交</title>
 </head>
 <body>
-  <form x-model-tb="5ee0758fe10ee5567ddcf46d">
-    <input x-model-field="f_text" >
-    <select x-model-field="f_select"></select>
+  <form x-form-tb="5ee0758fe10ee5567ddcf46d">
+    <input x-form-field="f_text">
+    <select x-form-field="f_select"></select>
     <label>
       <span>bool checkbox</span>
-      <input type="checkbox" x-model-field="f_bool" >
+      <input type="checkbox" x-form-field="f_bool" >
     </label>
-    <input type="radio" x-model-field="f_radio">
-    <input type="radio" x-model-field="f_radio">
+    <input type="radio" x-form-field="f_radio">
+    <input type="radio" x-form-field="f_radio">
     <div>
       <span>多选checkbox</span>
-      <input type=radio x-model-field=f_cks value=v0 >
-      <input type=radio x-model-field=f_cks value=v1 >
+      <input type=radio x-form-field=f_cks value=v0 >
+      <input type=radio x-form-field=f_cks value=v1 >
     </div>
     <button type="submit">提交</button>
   </form>
