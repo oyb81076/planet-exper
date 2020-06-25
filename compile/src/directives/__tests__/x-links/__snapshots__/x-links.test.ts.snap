@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`multiple all 1`] = `
+<!DOCTYPE html>
+<html x-key="pgjdSF" x-links="[
+  '5ee71f0159c61b62cdaaf7a3',
+  {href:'http://www.baidu.com'},
+  {media:'screen and (min-width: 600px) and (max-width: 800px)',file:'5ee71f0159c61b62cdaaf7a3'}
+]">
+<head x-key="LPxZ84"></head>
+<body x-key="joS4MV"></body>
+</html>
+`;
+
+exports[`multiple all 2`] = `
+<!DOCTYPE html>
+<html x-key="pgjdSF" x-links="['5ee71f0159c61b62cdaaf7a3',{href:'http://www.baidu.com'},{media:'screen and (min-width: 600px) and (max-width: 800px)',file:'5ee71f0159c61b62cdaaf7a3'}]">
+<head x-key="LPxZ84"></head>
+<body x-key="joS4MV"></body>
+</html>
+`;
+
+exports[`single all 1`] = `
+<!DOCTYPE html>
+<html x-key="QMhuN1" x-links="5ee71f0159c61b62cdaaf7a3">
+<head x-key="Sea6jl"></head>
+<body x-key="pe0F3i"></body>
+</html>
+`;
+
+exports[`single all 2`] = `
+<!DOCTYPE html>
+<html x-key="QMhuN1" x-links="5ee71f0159c61b62cdaaf7a3">
+<head x-key="Sea6jl"></head>
+<body x-key="pe0F3i"></body>
+</html>
+`;

@@ -1,10 +1,11 @@
-import { parseExpressionAt } from 'acorn';
 import { Expression } from 'estree';
-import { generate } from 'escodegen';
 import type { IDirectiveText } from '../ast';
 import { IContext } from '../parse/faces';
 import { createDirectiveText } from '../astUtils';
 import { createCompilerError, ErrorCodes } from '../errors';
+import parseExpression from '../utils/parseExpression';
+import serializeExpression from '../utils/serializeExpression';
+import { ISerializer } from '../serialize/faces';
 
 /**
  * @example
@@ -23,13 +24,13 @@ export default function processText(ctx: IContext, content: string): void {
 export function computeTextExpr(input: IDirectiveText): { value?: Expression } {
   return input.expr || (input.expr = parseExpr(input.content));
 }
-export function srzText(dir: IDirectiveText): string {
-  return dir.expr ? srzExpr(dir.expr) : dir.content;
+export function srzText(dir: IDirectiveText, opts: ISerializer): string {
+  return dir.expr ? srzExpr(dir.expr, opts.compactJS) : dir.content;
 }
-function srzExpr({ value }: { value?: Expression }): string {
-  return value ? generate(value) : '';
+function srzExpr({ value }: { value?: Expression }, compress: boolean): string {
+  return value ? serializeExpression(value, compress) : '';
 }
 function parseExpr(content: string): { value?: Expression } {
   if (!content) { return {}; }
-  return { value: parseExpressionAt(content) as Expression };
+  return { value: parseExpression(content) };
 }

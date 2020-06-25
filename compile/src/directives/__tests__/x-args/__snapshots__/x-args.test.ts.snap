@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`all 1`] = `
+<div x-key="so2Ays" x-args="[
+  {key:'id',title:'商品ID',desc:'具体描述',type:{kind:'number'}},
+  {key:'p0',type:{kind:'number'}},
+  {key:'p1',type:{kind:'boolean'}},
+  {key:'p2',type:{kind:'null'}},
+  {key:'p3',type:{kind:'string',defaults:'default string'}},
+  {key:'p4',type:{kind:'date',defaults:'2020-06-25T11:38:53.521Z'}},
+  {key:'p5',type:{kind:'date',defaults:'2020-06-25T11:39:10.341Z'}},
+  {key:'p6',type:{kind:'array',type:{kind:'number'},defaults:[null,null,null,null]}},
+  {key:'p7',type:{kind:'record',props:[{key:'a',type:{kind:'number'}}],defaults:{}}}
+]"></div>
+`;
+
+exports[`all 2`] = `<div x-key="so2Ays" x-args="[{key:'id',title:'商品ID',desc:'具体描述',type:'number'},{key:'p0',type:'number'},{key:'p1',type:'boolean'},{key:'p2',type:'null'},{key:'p3',type:{kind:'string',defaults:'default string'}},{key:'p4',type:{kind:'date',defaults:1593085133521}},{key:'p5',type:{kind:'date',defaults:1593085150341}},{key:'p6',type:{kind:'array',type:'number',defaults:[null,null,null,null]}},{key:'p7',type:{kind:'record',props:[{key:'a',type:'number'}],defaults:{}}}]"></div>`;
+
+exports[`all 3`] = `
+Object {
+  "args": Array [
+    Object {
+      "desc": "具体描述",
+      "key": "id",
+      "title": "商品ID",
+      "type": Object {
+        "kind": "number",
+      },
+    },
+    Object {
+      "desc": undefined,
+      "key": "p0",
+      "title": undefined,
+      "type": Object {
+        "defaults": undefined,
+        "kind": "number",
+      },
+    },
+    Object {
+      "desc": undefined,
+      "key": "p1",
+      "title": undefined,
+      "type": Object {
+        "defaults": undefined,
+        "kind": "boolean",
+      },
+    },
+    Object {
+      "desc": undefined,
+      "key": "p2",
+      "title": undefined,
+      "type": Object {
+        "kind": "null",
+      },
+    },
+    Object {
+      "desc": undefined,
+      "key": "p3",
+      "title": undefined,
+      "type": Object {
+        "defaults": "default string",
+        "kind": "string",
+      },
+    },
+    Object {
+      "desc": undefined,
+      "key": "p4",
+      "title": undefined,
+      "type": Object {
+        "defaults": 2020-06-25T11:38:53.521Z,
+        "kind": "date",
+      },
+    },
+    Object {
+      "desc": undefined,
+      "key": "p5",
+      "title": undefined,
+      "type": Object {
+        "defaults": 2020-06-25T11:39:10.341Z,
+        "kind": "date",
+      },
+    },
+    Object {
+      "desc": undefined,
+      "key": "p6",
+      "title": undefined,
+      "type": Object {
+        "defaults": Array [
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+        ],
+        "kind": "array",
+        "type": Object {
+          "kind": "number",
+        },
+      },
+    },
+    Object {
+      "desc": undefined,
+      "key": "p7",
+      "title": undefined,
+      "type": Object {
+        "defaults": Object {
+          "a": undefined,
+        },
+        "kind": "record",
+        "props": Array [
+          Object {
+            "key": "a",
+            "type": Object {
+              "defaults": undefined,
+              "kind": "number",
+            },
+          },
+        ],
+      },
+    },
+  ],
+  "element": Object {
+    "attrs": Array [],
+    "directives": Object {
+      "binds": Array [],
+      "on": Array [],
+    },
+    "key": "so2Ays",
+    "nodes": Array [],
+    "tagName": "div",
+    "type": 3,
+  },
+  "jsGlobals": Object {
+    "content": "",
+    "type": 2,
+  },
+  "links": Array [],
+  "scripts": Array [],
+  "type": "#html-fragment",
+}
+`;

@@ -5,20 +5,10 @@ import {
 import { createScript } from '../astUtils';
 import { IContext } from '../parse/faces';
 import { createCompilerError, ErrorCodes } from '../errors';
+import { ISerializer } from '../serialize/faces';
+import { IScript } from '../ast';
+import serializeJson from '../utils/serializeJson';
 
-/**
- *
- * @example
- *  parseLinks("'5ee71f0159c61b62cdaaf7a3'")
- *  parseLinks("['5ee71f0159c61b62cdaaf7a3']")
- *  parseLinks(`
- *    [
- *      '5ee71f0159c61b62cdaaf7a3',
- *      {src:'http://www.baidu.com'},
- *      {file: '5ee71f0159c61b62cdaaf7a3'}
- *    ]`
- *  )
- */
 export default function processScripts(ctx: IContext, value: string): void {
   const { scripts, root } = ctx;
   if (!root) {
@@ -44,9 +34,22 @@ export default function processScripts(ctx: IContext, value: string): void {
         }
         throw createCompilerError(ErrorCodes.X_D_SCRIPTS_ERR_SYNTAX, ctx, value, null);
       });
+    } else {
+      throw createCompilerError(ErrorCodes.X_D_SCRIPTS_ERR_SYNTAX, ctx, value, null);
     }
-    throw createCompilerError(ErrorCodes.X_D_SCRIPTS_ERR_SYNTAX, ctx, value, null);
   } catch (err) {
     throw createCompilerError(ErrorCodes.X_D_SCRIPTS_ERR_SYNTAX, ctx, value, err);
   }
+}
+
+export function srzScripts(scripts: IScript[], opts: ISerializer): string {
+  if (scripts.length === 0) { return ''; }
+  const value = scripts
+    .map(({ src, file }) => (file || (src ? { src } : undefined)))
+    .filter(Boolean);
+  if (value.length === 0) { return ''; }
+  if (value.length === 1 && isString(value[0])) {
+    return value[0];
+  }
+  return serializeJson(value, opts);
 }

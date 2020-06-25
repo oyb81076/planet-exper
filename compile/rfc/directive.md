@@ -6,11 +6,6 @@
 # 指令顺序
 x-find-*,x-each,x-if,x-html,x-text
 
-## x-text
-```html
-<div x-text="'some string value' + 1">expression</div>
-<div x-text="some_identity_text">identity</div>
-```
 ## x-html
 ```html
 <div x-html="'<div style=&quot;color:blue&quot;>Blue Text</div>'">static html</div>

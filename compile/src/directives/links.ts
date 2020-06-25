@@ -2,11 +2,13 @@ import { parse } from 'json5';
 import {
   isArray, isString, isPlainObject,
 } from 'lodash';
-import { NodeTypes } from '../ast';
+import { NodeTypes, ILink } from '../ast';
 import isUndefinedOrString from '../utils/isUndefinedOrString';
 import { createLink } from '../astUtils';
 import { IContext } from '../parse/faces';
 import { createCompilerError, ErrorCodes } from '../errors';
+import serializeJson from '../utils/serializeJson';
+import { ISerializer } from '../serialize/faces';
 
 /**
  *
@@ -28,6 +30,11 @@ export default function processLinks(ctx: IContext, value: string): void {
   const { root, links } = ctx;
   if (!root) {
     throw createCompilerError(ErrorCodes.X_D_LINKS_NOT_IN_ROOT, ctx, value, null);
+  }
+  value = value.trim();
+  if (value[0] !== '[' && value[0] !== "'" && value[0] !== '"') {
+    links.push(createLink(value));
+    return;
   }
   try {
     const arr = parse(value) as unknown;
@@ -52,9 +59,22 @@ export default function processLinks(ctx: IContext, value: string): void {
         }
         throw createCompilerError(ErrorCodes.X_D_LINKS_ERR_SYNTAX, ctx, value, `无法解析引用${JSON.stringify(obj)}`);
       });
+    } else {
+      throw createCompilerError(ErrorCodes.X_D_LINKS_ERR_SYNTAX, ctx, value, '类型必须为string或者array');
     }
-    throw createCompilerError(ErrorCodes.X_D_LINKS_ERR_SYNTAX, ctx, value, '类型必须为string或者array');
   } catch (err) {
     throw createCompilerError(ErrorCodes.X_D_LINKS_ERR_SYNTAX, ctx, value, err);
   }
+}
+export function srzLinks(links: ILink[], opts: ISerializer): string {
+  const value = links.map(mapLinks).filter(Boolean);
+  if (value.length === 0) { return ''; }
+  if (value.length === 1 && isString(value[0])) {
+    return value[0];
+  }
+  return serializeJson(value, opts);
+}
+function mapLinks({ media, href, file }: ILink) {
+  if (!media && !href) { return file; }
+  return { media, href, file };
 }

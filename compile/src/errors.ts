@@ -40,6 +40,9 @@ export enum ErrorCodes {
   X_D_SCRIPTS_NOT_IN_ROOT,
   X_D_SCRIPTS_ERR_SYNTAX,
 
+  X_D_ARGS_NOT_IN_ROOT,
+  X_D_ARGS_ERR_SYNTAX,
+
   X_D_CLASSES_SYNTAX,
   X_D_TEXT_SYNTAX,
   X_D_BIND_SYNTAX,
@@ -80,6 +83,8 @@ export const errorMessages: Record<ErrorCodes, string> = {
     {src:'https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js'},
     {file:'5ee4443700eef44a9041f9f0'},
   ]"`,
+  [ErrorCodes.X_D_ARGS_NOT_IN_ROOT]: 'x-args只能在跟节点使用',
+  [ErrorCodes.X_D_ARGS_ERR_SYNTAX]: 'x-args语法错误',
   [ErrorCodes.X_D_CLASSES_SYNTAX]: `x-classes指令语法错误,正确的例子:
   <div x-classes="{cls0:$val,cls1:$val}">`,
   [ErrorCodes.X_D_TEXT_SYNTAX]: `x-text指令语法错误,正确的例子:

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`all 1`] = `
+<!DOCTYPE html>
+<html x-key="0W0Vog">
+<head x-key="pu4Wx6"></head>
+<body x-key="KiFbMP">
+  <div x-key="n6S8ub" x-if="1==1;0"></div>
+  <div x-key="3jd1Sj" x-if="$item.value"></div>
+</body>
+</html>
+`;
+
+exports[`all 2`] = `
+<!DOCTYPE html>
+<html x-key="0W0Vog">
+<head x-key="pu4Wx6"></head>
+<body x-key="KiFbMP">
+  <div x-key="n6S8ub" x-if="1==1;0"></div>
+  <div x-key="3jd1Sj" x-if="$item.value"></div>
+</body>
+</html>
+`;

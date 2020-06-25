@@ -1,11 +1,12 @@
-import { parseExpressionAt } from 'acorn';
 import { Expression } from 'estree';
-import { generate } from 'escodegen';
 import type { IDirectiveIf } from '../ast';
 import { NodeTypes } from '../ast';
-import { parseInputOutput, srzInputOutput } from './utils/directiveUtils';
 import { IContext } from '../parse/faces';
 import { createCompilerError, ErrorCodes } from '../errors';
+import parseDirectiveStructure, { serializeDirectiveStructure } from './utils/directiveStructure';
+import parseExpression from '../utils/parseExpression';
+import serializeExpression from '../utils/serializeExpression';
+import { ISerializer } from '../serialize/faces';
 
 /**
  * <div x-each="$user:{item:$item}">
@@ -13,7 +14,7 @@ import { createCompilerError, ErrorCodes } from '../errors';
  */
 export default function processIf(ctx: IContext, content: string): void {
   try {
-    const { input, mock } = parseInputOutput(content);
+    const { input, mock } = parseDirectiveStructure(content);
     ctx.directives.if = {
       type: NodeTypes.DIRECTIVE_IF,
       input: { content: input },
@@ -29,20 +30,27 @@ export function computeIfInputExpr({ input }: IDirectiveIf): { test?: Expression
   return input.expr || (input.expr = parseInputExpr(input.content));
 }
 
-export function srzIf(expr: IDirectiveIf): string {
-  const input = expr.input.expr ? srzInputExpr(expr.input.expr) : expr.input.content;
+export function srzIf(expr: IDirectiveIf, opts: ISerializer): string {
+  const input = expr.input.expr
+    ? srzInputExpr(expr.input.expr, opts.compactJS)
+    : expr.input.content;
   const mock = srzMockExpr(expr.mock.expr);
-  return srzInputOutput(input, undefined, mock);
+  return serializeDirectiveStructure(input, undefined, mock);
 }
-function srzInputExpr({ test }: { test?: Expression }): string {
+function srzInputExpr({ test }: { test?: Expression }, compress: boolean): string {
   if (!test) { return ''; }
-  return generate(test);
+  return serializeExpression(test, compress);
 }
 function parseInputExpr(content: string): { test?: Expression } {
   if (content.length === 0) { return {}; }
-  return { test: parseExpressionAt(content) as Expression };
+  return { test: parseExpression(content) };
 }
 function srzMockExpr(expr: boolean) {
-  return expr === false ? 'false' : '';
+  return expr === false ? '0' : '';
 }
-function parseMockExpr(content: string) { return content !== 'false'; }
+function parseMockExpr(content: string) {
+  if (content) {
+    return false;
+  }
+  return true;
+}

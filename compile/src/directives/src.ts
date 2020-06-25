@@ -46,7 +46,7 @@ function parseExpr(content: string): NonNullable<IDirectiveSrc['expr']> {
   if (isPlainObject(obj)) {
     const { file } = obj as Record<string, unknown>;
     if (isString(file)) {
-      return { file: content };
+      return { file };
     }
   }
   throw new SyntaxError('必须使用Object表达式');

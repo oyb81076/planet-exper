@@ -1,13 +1,14 @@
-import { parseExpressionAt } from 'acorn';
-import { Expression } from 'estree';
-import json5, { stringify } from 'json5';
-import { generate } from 'escodegen';
+import { stringify } from 'json5';
 import { IContext } from '../parse/faces';
 import { createDirectiveHref } from '../astUtils';
 import { IDirectiveHref } from '../ast';
 import { ErrorCodes, createCompilerError } from '../errors';
-import { objectToRecord } from './utils/directiveUtils';
-import { isStringLiteral, isObjectExpression } from '../utils/esUtils';
+import recordExprToString from '../utils/recordExprToString';
+import isStringLiteral from '../utils/isStringLiteral';
+import objectExprToRecord from '../utils/objectExprToRecord';
+import isObjectExpression from '../utils/isObjectExpression';
+import parseExpression from '../utils/parseExpression';
+import { ISerializer } from '../serialize/faces';
 
 /**
  *
@@ -30,22 +31,25 @@ export function computeHrefExpr(
   return input.expr || (input.expr = parseExpr(input.content));
 }
 
-export function srzHref(dir: IDirectiveHref): string {
-  return dir.expr ? srzExpr(dir.expr) : dir.content;
+export function srzHref(dir: IDirectiveHref, opts: ISerializer): string {
+  return dir.expr ? srzExpr(dir.expr, opts) : dir.content;
 }
 
-function srzExpr({
-  file, pathname, query, hash,
-}: NonNullable<IDirectiveHref['expr']>): string {
+function srzExpr(
+  {
+    file, uri, query, hash,
+  }: NonNullable<IDirectiveHref['expr']>,
+  opts: ISerializer,
+): string {
   const params: string[] = [];
   if (file) {
     params.push(`file:${stringify(file)}`);
   }
-  if (pathname) {
-    params.push(`pathname:${stringify(pathname)}`);
+  if (uri) {
+    params.push(`uri:${stringify(uri)}`);
   }
   if (query) {
-    params.push(`query:${generate(query)}`);
+    params.push(`query:${recordExprToString(query, opts)}`);
   }
   if (hash) {
     params.push(`hash:${stringify(hash)}`);
@@ -59,13 +63,13 @@ function parseExpr(content: string): NonNullable<IDirectiveHref['expr']> {
   if (content[0] !== '{') {
     return { file: content };
   }
-  const obj = parseExpressionAt(content) as Expression;
+  const obj = parseExpression(content);
   if (obj.type !== 'ObjectExpression') {
     throw new SyntaxError('必须使用object表达式');
   }
   const {
-    file, pathname, query, hash,
-  } = objectToRecord(obj);
+    file, uri, query, hash,
+  } = objectExprToRecord(obj);
   const out: IDirectiveHref['expr'] = {};
   if (file) {
     if (!isStringLiteral(file)) {
@@ -73,17 +77,17 @@ function parseExpr(content: string): NonNullable<IDirectiveHref['expr']> {
     }
     out.file = file.value;
   }
-  if (pathname) {
-    if (!isStringLiteral(pathname)) {
-      throw new SyntaxError('pathname参数必须是字符串类型');
+  if (uri) {
+    if (!isStringLiteral(uri)) {
+      throw new SyntaxError('uri参数必须是字符串类型');
     }
-    out.pathname = pathname.value;
+    out.uri = uri.value;
   }
   if (query) {
     if (!isObjectExpression(query)) {
       throw new SyntaxError('query参数必须使用object表达式');
     }
-    out.query = query;
+    out.query = objectExprToRecord(query);
   }
   if (hash) {
     if (!isStringLiteral(hash)) {

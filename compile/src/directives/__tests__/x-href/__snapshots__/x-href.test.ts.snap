@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`all 1`] = `
+<!DOCTYPE html>
+<html x-key="ytZeO7" lang="en">
+<head x-key="nN1g7F"></head>
+<body x-key="hN9ubS">
+  <a x-key="eHtFBW" x-href="{file:'5ee4443700eef44a9041f9f0'}">FileOnly</a>
+  <a x-key="LdySSk" x-href="{file:'5ee4443700eef44a9041f9f0',query:{q1:urls.query.q1},hash:'hash_value'}">WithFileQueryHash</a>
+  <a x-key="flYDVq" x-href="{uri:'https://www.baidu.com/s',query:{wd:urls.query.q1},hash:'hash_value'}">WithURIquery</a>
+  <a x-key="GgpPvH" href="https://www.baidu.com/s?wd=key_words">href</a>
+</body>
+</html>
+`;
+
+exports[`all 2`] = `
+<!DOCTYPE html>
+<html x-key="ytZeO7" lang="en">
+<head x-key="nN1g7F"></head>
+<body x-key="hN9ubS">
+  <a x-key="eHtFBW" x-href="{file:'5ee4443700eef44a9041f9f0'}">FileOnly</a>
+  <a x-key="LdySSk" x-href="{file:'5ee4443700eef44a9041f9f0',query:{q1:urls.query.q1},hash:'hash_value'}">WithFileQueryHash</a>
+  <a x-key="flYDVq" x-href="{uri:'https://www.baidu.com/s',query:{wd:urls.query.q1},hash:'hash_value'}">WithURIquery</a>
+  <a x-key="GgpPvH" href="https://www.baidu.com/s?wd=key_words">href</a>
+</body>
+</html>
+`;

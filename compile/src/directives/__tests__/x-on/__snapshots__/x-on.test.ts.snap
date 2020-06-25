@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`all 1`] = `
+<!DOCTYPE html>
+<html x-key="ZRMdmn" lang="en">
+<head x-key="fFIAD2"></head>
+<body x-key="CQ0DA0">
+  <div x-key="gNwavs" x-on-click-vars="{a:1,b:2}" x-on-click-alert="pt.alert('some alert js')">aaa</div>
+</body>
+</html>
+`;
+
+exports[`all 2`] = `
+<!DOCTYPE html>
+<html x-key="ZRMdmn" lang="en">
+<head x-key="fFIAD2"></head>
+<body x-key="CQ0DA0">
+  <div x-key="gNwavs" x-on-click-vars="{a:1,b:2}" x-on-click-alert="pt.alert('some alert js')">aaa</div>
+</body>
+</html>
+`;

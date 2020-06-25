@@ -1,5 +1,3 @@
-import { stringify } from 'json5';
-import { isString } from 'lodash';
 import {
   ILink,
   IScript,
@@ -8,7 +6,7 @@ import {
   IDirectives,
   IDirectiveDisabled,
   IDirectiveEach,
-  ITypeArgs,
+  ITypeArg,
   IDirectiveIf,
   IDirectiveBind,
   IDirectiveSrc,
@@ -18,7 +16,7 @@ import {
   IDirectiveJavascript,
   IDirectiveText,
 } from '../ast';
-import recordExprToString from './utils/recordExprToString';
+import recordExprToString from '../utils/recordExprToString';
 import escapeAttrValue from './utils/escapeAttrValue';
 import isSelfClosing from './utils/isSelfClosing';
 import { srzEachValue } from '../directives/each';
@@ -30,13 +28,25 @@ import { srzClasses } from '../directives/classes';
 import { srzOn } from '../directives/on';
 import { srzJavascript } from '../directives/javascript';
 import { srzText } from '../directives/text';
+import { srzLinks } from '../directives/links';
+import { ISerializeConfig, ISerializer } from './faces';
+import { srzScripts } from '../directives/scripts';
+import { srzArgs } from '../directives/args';
 // html,head,body都不占用缩进
 interface ITag {
   name: string;
-  opened: boolean;
+  childRendered: boolean;
+  inline: boolean;
 }
-export default class Serializer {
-  private compress = false;
+
+export default class Serializer implements ISerializer {
+  public readonly compress: boolean;
+
+  public readonly compactJS: boolean;
+
+  public readonly compactJSON: boolean;
+
+  public readonly quote: boolean;
 
   private tags: Array<ITag> = [];
 
@@ -46,54 +56,75 @@ export default class Serializer {
 
   public html = '';
 
+  constructor({
+    compress = true, quote = !compress, compactJS = compress, compactJSON = compress,
+  }: ISerializeConfig) {
+    this.compress = compress;
+    this.quote = quote;
+    this.compactJS = compactJS;
+    this.compactJSON = compactJSON;
+  }
+
   doctype(): void {
     this.html += '<!DOCTYPE html>';
   }
 
   text(text: string): void {
-    if (this.currentTag && !this.currentTag.opened) {
-      this.currentTag.opened = true;
+    const { currentTag } = this;
+    if (currentTag && !currentTag.childRendered) {
+      currentTag.childRendered = true;
+      currentTag.inline = false;
       this.html += '>';
-      this.newline();
     }
+    this.newline();
     this.newIndent();
     this.html += text;
   }
 
   // 但行文本 <div>xxxxx</div>
   inlineText(text: string): void {
-    if (text.length > 50 || !this.currentTag || this.currentTag.opened) {
+    const { currentTag } = this;
+    if (text.length > 50 || !currentTag || currentTag.childRendered) {
       this.text(text);
     } else {
+      currentTag.childRendered = true;
       this.html += `>${text}`;
     }
   }
 
   openTag(tag: string): void {
-    if (this.currentTag && !this.currentTag.opened) {
-      this.currentTag.opened = true;
+    const { currentTag } = this;
+    if (currentTag && !currentTag.childRendered) {
+      currentTag.childRendered = true;
+      currentTag.inline = false;
       this.html += '>';
     }
-    this.newline();
-    this.tags.push(this.currentTag = { name: tag, opened: false });
-    if (!this.compress && isIdentTag(tag)) {
-      this.indent += '  ';
+    this.tags.push(this.currentTag = { name: tag, childRendered: false, inline: true });
+    if (this.html) {
+      this.newline();
+      if (!this.compress && isIdentTag(tag)) {
+        this.indent += '  ';
+      }
+      this.newIndent();
     }
-    this.newIndent();
     this.html += `<${tag}`;
   }
 
   closeTag(): void {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { name, opened } = this.currentTag!;
+    const { name, childRendered, inline } = this.currentTag!;
     this.tags.pop();
     this.currentTag = this.tags[this.tags.length - 1];
-    if (!opened && isSelfClosing(name)) {
+    if (!childRendered && isSelfClosing(name)) {
       this.html += '>';
     } else {
-      if (opened) {
-        this.newline();
-        this.newIndent();
+      if (childRendered) {
+        if (!inline) {
+          this.newline();
+          this.newIndent();
+        }
+      } else {
+        this.html += '>';
       }
       this.html += `</${name}>`;
     }
@@ -110,7 +141,7 @@ export default class Serializer {
   private writeAttrValue(value?: string): void {
     if (value) {
       this.html += '=';
-      this.html += escapeAttrValue(value, this.compress);
+      this.html += escapeAttrValue(value, this.quote);
     }
   }
 
@@ -141,13 +172,13 @@ export default class Serializer {
 
   private xEach(dir?: IDirectiveEach): void {
     if (dir) {
-      this.writeDirective('x-each', srzEachValue(dir));
+      this.writeDirective('x-each', srzEachValue(dir, this));
     }
   }
 
   private xIf(dir?: IDirectiveIf): void {
     if (dir) {
-      this.writeDirective('x-if', srzIf(dir));
+      this.writeDirective('x-if', srzIf(dir, this));
     }
   }
 
@@ -159,24 +190,24 @@ export default class Serializer {
 
   private xHref(dir?: IDirectiveHref): void {
     if (dir) {
-      this.writeDirective('x-href', srzHref(dir));
+      this.writeDirective('x-href', srzHref(dir, this));
     }
   }
 
   private xClasses(value?: IDirectiveClasses): void {
     if (value) {
-      this.writeDirective('x-classes', srzClasses(value));
+      this.writeDirective('x-classes', srzClasses(value, this));
     }
   }
 
   private xText(dir?: IDirectiveText): void {
     if (dir) {
-      this.writeDirective('x-text', srzText(dir));
+      this.writeDirective('x-text', srzText(dir, this));
     }
   }
 
   private xBind(bind: IDirectiveBind): void {
-    const [name, value] = srzBind(bind);
+    const [name, value] = srzBind(bind, this);
     this.writeDirective(name, value);
   }
 
@@ -191,10 +222,8 @@ export default class Serializer {
   }
 
   writeDirective(name: string, value: string): void {
-    if (value) {
-      this.writeAttrName(name);
-      this.writeAttrValue(value);
-    }
+    this.writeAttrName(name);
+    this.writeAttrValue(value);
   }
 
   writeAttr(name: string, value?: string): void {
@@ -207,39 +236,30 @@ export default class Serializer {
   }
 
   xLinks(links: ILink[]): void {
-    if (links.length === 0) { return; }
-    const value = links.map(mapLinks).filter(Boolean);
-    if (value.length === 0) { return; }
-    if (value.length === 1 && isString(value[0])) {
-      this.writeDirective('x-links', value[0]);
-    } else {
-      this.writeDirective('x-links', stringify(value));
+    const value = srzLinks(links, this);
+    if (value) {
+      this.writeDirective('x-links', value);
     }
   }
 
   xScripts(scripts: IScript[]): void {
-    if (scripts.length === 0) { return; }
-    const value = scripts
-      .map(({ src, file }) => (file || (src ? { src } : undefined)))
-      .filter(Boolean);
-    if (value.length === 0) { return; }
-    if (value.length === 1 && isString(value[0])) {
-      this.writeDirective('x-scripts', value[0]);
-    } else {
-      this.writeDirective('x-scripts', stringify(value));
+    const value = srzScripts(scripts, this);
+    if (value) {
+      this.writeDirective('x-scripts', value);
     }
   }
 
   xJsGlobals(globals: IJsGlobals): void {
-    const out = globals.expr ? recordExprToString(globals.expr) : globals.content;
+    const out = globals.expr ? recordExprToString(globals.expr, this) : globals.content;
     if (out && out !== '{}') {
       this.writeAttr('x-globals', out);
     }
   }
 
-  xArgs(args: ITypeArgs[]): void {
-    if (args.length) {
-      this.writeDirective('x-args', stringify(args));
+  xArgs(args: ITypeArg[]): void {
+    const value = srzArgs(args, this);
+    if (value) {
+      this.writeDirective('x-args', value);
     }
   }
 
@@ -255,10 +275,7 @@ export default class Serializer {
     }
   }
 }
-function mapLinks({ media, href, file }: ILink) {
-  if (!media && !href) { return file; }
-  return { media, href, file };
-}
+
 function isIdentTag(tag: string) {
   return tag !== 'html' && tag !== 'head' && tag !== 'body';
 }

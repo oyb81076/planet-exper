@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`all 1`] = `
+<!DOCTYPE html>
+<html x-key="FtOrMD" lang="en">
+<head x-key="aMy8HC"></head>
+<body x-key="EsAHCR">
+  <div x-key="95cL7p" x-javascript="$(this).carousel()"></div>
+</body>
+</html>
+`;
+
+exports[`all 2`] = `
+<!DOCTYPE html>
+<html x-key="FtOrMD" lang="en">
+<head x-key="aMy8HC"></head>
+<body x-key="EsAHCR">
+  <div x-key="95cL7p" x-javascript="$(this).carousel()"></div>
+</body>
+</html>
+`;

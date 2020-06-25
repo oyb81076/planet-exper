@@ -1,9 +1,10 @@
 import { Expression } from 'estree';
-import { parseExpressionAt } from 'acorn';
-import { generate } from 'escodegen';
 import { IContext } from '../parse/faces';
 import { IDirectiveBind, NodeTypes } from '../ast';
 import { createCompilerError, ErrorCodes } from '../errors';
+import parseExpression from '../utils/parseExpression';
+import serializeExpression from '../utils/serializeExpression';
+import { ISerializer } from '../serialize/faces';
 
 /**
  * @example
@@ -27,19 +28,22 @@ export function computeBindExpr(input: IDirectiveBind): { value?: Expression } {
   return input.expr || (input.expr = parseExpr(input.value));
 }
 
-export function srzBind({ name, value, expr }: IDirectiveBind): [string, string] {
+export function srzBind(
+  { name, value, expr }: IDirectiveBind,
+  { compactJS }: ISerializer,
+): [string, string] {
   return [
     `x--${name}`,
-    expr ? srzExpr(expr) : value,
+    expr ? srzExpr(expr, compactJS) : value,
   ];
 }
 
 function parseExpr(content: string): { value?: Expression } {
   if (!content) { return {}; }
-  return { value: parseExpressionAt(content) as Expression };
+  return { value: parseExpression(content) };
 }
 
-function srzExpr({ value }: { value?: Expression }) {
+function srzExpr({ value }: { value?: Expression }, compress: boolean) {
   if (!value) { return ''; }
-  return generate(value);
+  return serializeExpression(value, compress);
 }

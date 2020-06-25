@@ -1,5 +1,5 @@
 import {
-  ILink, IScript, IJsGlobals, IDirectives, IElementAttribute, ITypeArgs,
+  ILink, IScript, IJsGlobals, IDirectives, IElementAttribute, ITypeArg,
 } from '../ast';
 
 export interface IConfig {
@@ -23,5 +23,5 @@ export interface IContext {
   scripts: IScript[];
   links: ILink[];
   jsGlobals?: IJsGlobals;
-  args: ITypeArgs[];
+  args: ITypeArg[];
 }

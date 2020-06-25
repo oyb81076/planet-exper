@@ -1,18 +1,17 @@
 import { DefaultTreeElement, DefaultTreeNode, DefaultTreeTextNode } from 'parse5';
 import {
-  IElementNode, IChildNode, ITextNode, ILink, IScript, IJsGlobals, ITypeArgs,
+  IElementNode, IChildNode, ITextNode, ILink, IScript, IJsGlobals, ITypeArg,
 } from '../ast';
 import { createElement, createText, createJsGlobals } from '../astUtils';
 import { IContext, IConfig } from './faces';
 import processAttrs from './processAttrs';
-import isEmptyString from '../utils/isEmptyString';
 
 export default function parseRoot(node: DefaultTreeElement, config: IConfig): {
   element: IElementNode;
   links: ILink[];
   includes: string[];
   scripts: IScript[];
-  args: ITypeArgs[];
+  args: ITypeArg[];
   jsGlobals: IJsGlobals;
 } {
   const ctx: IContext = {
@@ -66,10 +65,15 @@ function shouldTrim(ctx: IContext) {
 }
 function parseText(ctx: IContext, { value }: DefaultTreeTextNode): ITextNode | undefined {
   ctx.key = undefined;
-  if (ctx.trimSpace && isEmptyString(value)) {
-    return undefined;
+  if (ctx.trimSpace) {
+    value = trim(value);
   }
+  if (!value) { return undefined; }
   return createText(value);
+}
+// 去空格的时候不要把\u00A0(nbsp)给去掉, 所以不使用String.prototype.trim操作
+function trim(val: string) {
+  return val.replace(/[ \r\t\n]/g, '');
 }
 function parseElement(ctx: IContext, node: DefaultTreeElement) {
   ctx.attrs = [];

@@ -12,6 +12,7 @@ import processText from '../directives/text';
 import processBind from '../directives/bind';
 import { createCompilerError, ErrorCodes } from '../errors';
 import processOn from '../directives/on';
+import processArgs from '../directives/args';
 
 export default function processDirective(
   ctx: IContext,
@@ -30,13 +31,13 @@ export default function processDirective(
     case 'x-href': return processHref(ctx, value);
     case 'x-classes': return processClasses(ctx, value);
     case 'x-text': return processText(ctx, value);
+    case 'x-args': return processArgs(ctx, value);
     default:
       if (name.startsWith('x--')) {
-        processBind(ctx, name, value);
-      } else if (name.startsWith('x-on-')) {
-        processOn(ctx, name, value);
-      } else {
-        throw createCompilerError(ErrorCodes.X_D_UNKNOWN, ctx, name, `未知指令${name}`);
+        return processBind(ctx, name, value);
+      } if (name.startsWith('x-on-')) {
+        return processOn(ctx, name, value);
       }
+      throw createCompilerError(ErrorCodes.X_D_UNKNOWN, ctx, name, `未知指令${name}`);
   }
 }

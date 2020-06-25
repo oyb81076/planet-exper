@@ -1,5 +1,5 @@
 import {
-  ObjectExpression, Expression, SimpleLiteral, Identifier, MemberExpression, Literal,
+  ObjectExpression, Expression, SimpleLiteral, Identifier, MemberExpression,
 } from 'estree';
 // ast 动态节点部分以 content 为主, 用户修改
 export enum NodeTypes {
@@ -159,8 +159,8 @@ export interface IDirectiveHref extends INode {
   type: NodeTypes.DIRECTIVE_HREF;
   expr?: {
     file?: string;
-    pathname?: string;
-    query?: ObjectExpression;
+    uri?: string;
+    query?: Record<string, Expression>;
     hash?: string;
   }
   content: string;
@@ -333,13 +333,13 @@ export interface IDirectiveEach extends INode {
   // 静态开发循环次数
   mock: {
     expr?: {
-      length: number;
+      length?: number;
     }
     content: string;
   };
   content: string;
 }
-export interface ITypeArgs {
+export interface ITypeArg {
   key: string;
   title?: string;
   desc?: string;
@@ -380,7 +380,7 @@ export interface ITypeString {
 
 export interface ITypeDate {
   kind: TypeKinds.DATE;
-  defaults?: string | number;
+  defaults?: Date;
 }
 
 export interface ITypeBool {
@@ -400,5 +400,6 @@ export interface ITypeArray {
 
 export interface ITypeRecord {
   kind: TypeKinds.RECORD;
-  value: ITypeArgs[]
+  props: Array<{ key: string, type: IType }>;
+  defaults?: Record<string, unknown>;
 }

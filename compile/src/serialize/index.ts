@@ -2,18 +2,22 @@ import {
   IHTMLFragDocument, IHTMLFullDocument, IChildNode, NodeTypes,
 } from '../ast';
 import Serializer from './Serializer';
+import type { ISerializeConfig } from './faces';
 
-export default function serialize(doc: IHTMLFragDocument | IHTMLFullDocument): string {
+export default function serialize(
+  doc: IHTMLFragDocument | IHTMLFullDocument,
+  config: ISerializeConfig = {},
+): string {
   const { element } = doc;
-  const ctx = new Serializer();
+  const ctx = new Serializer(config);
   if (doc.type === '#html-document') {
     ctx.doctype();
   }
   ctx.openTag(element.tagName);
+  ctx.xKey(element.key);
   if (doc.type === '#html-fragment') {
     ctx.xArgs(doc.args);
   }
-  ctx.xKey(element.key);
   ctx.xLinks(doc.links);
   ctx.xScripts(doc.scripts);
   ctx.xJsGlobals(doc.jsGlobals);

@@ -2,6 +2,8 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
+  snapshotSerializers: [require.resolve('./scripts/jest-html-serializer.js')],
+
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
